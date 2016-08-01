@@ -17,6 +17,21 @@ describe('GET /posts', function() {
   });
 });
 
+describe('GET /posts/1', function() {
+  it('respond with json', function(done) {
+    server
+      .get('/posts/1')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err,res){
+        res.status.should.equal(200);
+        res.body.id.should.be.equal(1);
+      done();
+    });
+  });
+});
+
 describe('POST /posts with no Tags', function() {
   it('respond with json', function(done) {
     var postTitle = "New post title";

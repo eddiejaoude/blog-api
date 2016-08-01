@@ -5,9 +5,33 @@ var router = express.Router();
 /* GET posts listing. */
 router.get('/', function(req, res, next) {
   models.post.findAll({
-    include: [ models.tag ]
+    include: [{
+      model: models.tag,
+      attributes: ['id', 'name'],
+      through: {
+        attributes: []
+      }
+    }]
   }).then(function(posts) {
     res.json(posts);
+  });
+});
+
+/* GET post details. */
+router.get('/:id', function(req, res, next) {
+  models.post.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [{
+      model: models.tag,
+      attributes: ['id', 'name'],
+      through: {
+        attributes: []
+      }
+    }]
+  }).then(function(post) {
+    res.json(post);
   });
 });
 
