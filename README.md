@@ -5,7 +5,7 @@ API using ExpressJS.
 ## Dependencies
 
 * ExpressJS
-*
+* Sequelize
 
 ## Installation / Setup
 
