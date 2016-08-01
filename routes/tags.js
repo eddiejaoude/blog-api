@@ -16,5 +16,13 @@ router.post('/', function(req, res, next) {
   })
 });
 
+/* POST tag. */
+router.delete('/:id', function(req, res, next) {
+  models.tag.findById(req.params.id).then(function(tag) {
+    tag.destroy();
+  }).then(function() {
+    res.status(204).json({});
+  })
+});
 
 module.exports = router;
