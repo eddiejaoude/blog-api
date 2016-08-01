@@ -5,7 +5,7 @@ API using ExpressJS.
 ## Dependencies
 
 * ExpressJS
-* Sequelize
+* SequelizeJS
 
 ## Installation / Setup
 
@@ -13,6 +13,18 @@ API using ExpressJS.
 * Run server `DEBUG=api:* npm start`
 * Visit `http://localhost:3000/`
 
+### Testing
+
+* Run `npm test` (note: server from above must be running)
+
 ## End points
 
+### Tags
+
+* [GET] `/tags`
+* [POST] `/tags`
+
+### Posts
+
 * [GET] `/posts`
+* [POST] `/posts`
