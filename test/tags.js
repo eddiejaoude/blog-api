@@ -18,6 +18,54 @@ describe('GET /tags', function () {
     });
 });
 
+describe('GET /tags/{id}', function () {
+    it('gets existing Tag details with Posts', function (done) {
+        var tagData = {
+            name: 'Tag name'
+        };
+        var postData = {
+            title: 'Test Post title with Tag',
+            description: 'Test Post description'
+        };
+
+        models.tag.create(tagData).then(function (tag) {
+            models.post.create(postData).then(function (post) {
+                post.setTags([tag]).then(function () {
+                    server
+                        .get('/tags/' + tag.id)
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', /json/)
+                        .expect(200)
+                        .end(function (err, res) {
+                            res.status.should.equal(200);
+                            res.body.id.should.be.equal(tag.id);
+                            res.body.name.should.be.equal(tagData.name);
+                            res.body.posts.length.should.be.equal(1);
+                            res.body.posts[0].id.should.be.equal(post.id);
+                            res.body.posts[0].title.should.be.equal(postData.title);
+                            res.body.posts[0].description.should.be.equal(postData.description);
+                            done();
+                        });
+                });
+            });
+        });
+    });
+});
+
+describe('GET /tags/{id}', function () {
+    it('tries to get non existing Tag', function (done) {
+        server
+            .get('/tags/' + Number.MAX_VALUE)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(404)
+            .end(function (err, res) {
+                res.status.should.equal(404);
+                done();
+            });
+    });
+});
+
 describe('POST /tags', function () {
     it('creates a new Tag', function (done) {
         var tagData = {

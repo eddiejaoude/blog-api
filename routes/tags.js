@@ -8,6 +8,29 @@ router.get('/', function (req, res, next) {
     });
 });
 
+router.get('/:id', function (req, res, next) {
+    models.tag.findOne({
+        where: {
+            id: req.params.id
+        },
+        include: [{
+            model: models.post,
+            // attributes: ['id', 'name'],
+            through: {
+                attributes: []
+            }
+        }]
+    }).then(function (tag) {
+        if (tag === null) {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        } else {
+            res.json(tag);
+        }
+    });
+});
+
 router.post('/', function (req, res, next) {
     models.tag.create(req.body).then(function (tag) {
         res.status(201).json(tag);
