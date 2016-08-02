@@ -93,4 +93,50 @@ router.delete('/:id', function (req, res, next) {
     })
 });
 
+router.put('/:id', function (req, res, next) {
+    models.post.findById(req.params.id).then(function (post) {
+        if (post === null) {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        } else {
+            if (req.body.tags === undefined) {
+                post.update(req.body).then(function (post) {
+                    res.status(200).json(post);
+                });
+            } else {
+                // find existing tags
+                models.tag.findAll({
+                    where: {
+                        id: {
+                            $in: [req.body.tags.map(function (tag) {
+                                return tag.id;
+                            })]
+                        }
+                    }
+                }).then(function (tags) {
+                    // create post
+                    post.update(req.body).then(function (post) {
+                        // assign tags to post
+                        post.setTags(tags).then(function (tags) {
+                            models.post.findOne({
+                                where: {id: post.id},
+                                include: [{
+                                    model: models.tag,
+                                    attributes: ['id', 'name'],
+                                    through: {
+                                        attributes: []
+                                    }
+                                }]
+                            }).then(function (postWithTags) {
+                                res.status(200).json(postWithTags);
+                            });
+                        });
+                    });
+                });
+            }
+        }
+    });
+});
+
 module.exports = router;

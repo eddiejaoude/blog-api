@@ -147,3 +147,76 @@ describe('DELETE /posts', function () {
             });
     });
 });
+
+describe('PUT /posts/{id}', function () {
+    it('tries to update non existing Post', function (done) {
+        server
+            .put('/posts/' + Number.MAX_VALUE)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(404)
+            .end(function (err, res) {
+                res.status.should.equal(404);
+                done();
+            });
+    });
+});
+
+describe('PUT /posts/{id}', function () {
+    it('updates an existing Post with no Tags', function (done) {
+        var postData = {
+            title: 'Test Post to Update'
+        };
+        var postDataUpdate = {
+            title: 'Test Post Updated'
+        };
+
+        models.post.create(postData).then(function (post) {
+            server
+                .put('/posts/' + post.id)
+                .send(postDataUpdate)
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (err, res) {
+                    res.status.should.equal(200);
+                    res.body.title.should.equal(postDataUpdate.title);
+                    done();
+                });
+        });
+    });
+});
+
+describe('PUT /posts/{id}', function () {
+    it('updates an existing Post with Tags', function (done) {
+        var postData = {
+            title: 'Test Post to Update'
+        };
+        var postDataUpdate = {
+            title: 'Test Post Updated'
+        };
+        var tagData = {
+            name: 'Test Tag for Post'
+        };
+
+        models.post.create(postData).then(function (post) {
+            models.tag.create(tagData).then(function (tag) {
+                server
+                    .put('/posts/' + post.id)
+                    .send({title: postDataUpdate.title, description: postDataUpdate.description, tags: [{id: tag.id}]})
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .end(function (err, res) {
+                        res.status.should.equal(200);
+                        res.body.id.should.be.equal(post.id);
+                        res.body.title.should.be.equal(postDataUpdate.title);
+                        res.body.tags.length.should.be.equal(1);
+                        res.body.tags[0].id.should.be.equal(tag.id);
+                        res.body.tags[0].name.should.be.equal(tagData.name);
+                        done();
+                    });
+            });
+        });
+    });
+});
