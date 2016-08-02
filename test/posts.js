@@ -1,4 +1,5 @@
 var supertest = require('supertest');
+var assert = require('chai').assert;
 var should = require("should");
 var models = require('../models');
 var server = supertest.agent("http://localhost:3000");
@@ -128,6 +129,9 @@ describe('DELETE /posts', function () {
                 .expect(204)
                 .end(function (err, res) {
                     res.status.should.equal(204);
+                    models.post.findById(post.id).then(function(post) {
+                        assert.isNull(post);
+                    });
                     done();
                 });
         });
