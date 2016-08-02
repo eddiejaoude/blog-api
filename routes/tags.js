@@ -1,6 +1,7 @@
 var models = require('../models');
 var express = require('express');
 var router = express.Router();
+var sequelize = require('sequelize')
 
 router.get('/', function (req, res, next) {
     models.tag.findAll({}).then(function (tags) {
@@ -21,12 +22,12 @@ router.get('/:id', function (req, res, next) {
             }
         }]
     }).then(function (tag) {
-        if (tag === null) {
+        if (tag) {
+            res.json(tag);
+        } else {
             var err = new Error('Not Found');
             err.status = 404;
             next(err);
-        } else {
-            res.json(tag);
         }
     });
 });
@@ -34,34 +35,34 @@ router.get('/:id', function (req, res, next) {
 router.post('/', function (req, res, next) {
     models.tag.create(req.body).then(function (tag) {
         res.status(201).json(tag);
-    })
+    });
 });
 
 router.delete('/:id', function (req, res, next) {
     models.tag.findById(req.params.id).then(function (tag) {
-        if (tag === null) {
+        if (tag) {
+            tag.destroy();
+            res.status(204).json({});
+        } else {
             var err = new Error('Not Found');
             err.status = 404;
             next(err);
-        } else {
-            tag.destroy();
-            res.status(204).json({});
         }
-    })
+    });
 });
 
 router.put('/:id', function (req, res, next) {
     models.tag.findById(req.params.id).then(function (tag) {
-        if (tag === null) {
-            var err = new Error('Not Found');
-            err.status = 404;
-            next(err);
-        } else {
+        if (tag) {
             tag.update(req.body).then(function(tag) {
                 res.status(200).json(tag);
             });
+        } else {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
         }
-    })
+    });
 });
 
 module.exports = router;

@@ -29,12 +29,12 @@ router.get('/:id', function (req, res, next) {
             }
         }]
     }).then(function (post) {
-        if (post === null) {
+        if (post) {
+            res.json(post);
+        } else {
             var err = new Error('Not Found');
             err.status = 404;
             next(err);
-        } else {
-            res.json(post);
         }
     });
 });
@@ -82,15 +82,15 @@ router.post('/', function (req, res, next) {
 
 router.delete('/:id', function (req, res, next) {
     models.post.findById(req.params.id).then(function (post) {
-        if (post === null) {
+        if (post) {
+            post.destroy();
+            res.status(204).json({});
+        } else {
             var err = new Error('Not Found');
             err.status = 404;
             next(err);
-        } else {
-            post.destroy();
-            res.status(204).json({});
         }
-    })
+    });
 });
 
 router.put('/:id', function (req, res, next) {
