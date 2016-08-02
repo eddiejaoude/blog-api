@@ -66,8 +66,9 @@ API using ExpressJS.
 
 *Note: Only `tag.id` is required on `POST` & `PUT`, the `tag.name` is in `GET`*
 
-## Future considerations
+## Pending work
 
 * DB migrations
+* Authentication
 * Pagination
 * Hypermedia HAL
