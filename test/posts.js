@@ -99,3 +99,24 @@ describe('POST /posts with Tags', function () {
         });
     });
 });
+
+describe('DELETE /posts', function () {
+    // delete tag
+    it('deletes Post', function (done) {
+        var postData = {
+            name: 'Test Post to Delete'
+        };
+
+        models.post.create(postData).then(function (post) {
+            server
+                .delete('/posts/' + post.id)
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(204)
+                .end(function (err, res) {
+                    res.status.should.equal(204);
+                    done();
+                });
+        });
+    });
+});

@@ -74,4 +74,17 @@ router.post('/', function (req, res, next) {
 
 });
 
+router.delete('/:id', function (req, res, next) {
+    models.post.findById(req.params.id).then(function (post) {
+        if (post === null) {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        } else {
+            post.destroy();
+            res.status(204).json({});
+        }
+    })
+});
+
 module.exports = router;
