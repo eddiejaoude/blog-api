@@ -4,7 +4,7 @@ var models = require('../models');
 var server = supertest.agent("http://localhost:3000");
 
 describe('GET /posts', function () {
-    it('respond with json', function (done) {
+    it('lists Posts', function (done) {
         var postData = {
             title: 'Test Post title',
             description: 'Test Post description'
@@ -26,7 +26,7 @@ describe('GET /posts', function () {
 });
 
 describe('GET /posts/{id}', function () {
-    it('respond with json', function (done) {
+    it('gets existing Post details', function (done) {
         var postData = {
             title: 'Test Post title',
             description: 'Test Post description'
@@ -44,6 +44,20 @@ describe('GET /posts/{id}', function () {
                     done();
                 });
         });
+    });
+});
+
+describe('GET /posts/{id}', function () {
+    it('tries to get non existing Post', function (done) {
+        server
+            .get('/posts/' + Number.MAX_VALUE)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(404)
+            .end(function (err, res) {
+                res.status.should.equal(404);
+                done();
+            });
     });
 });
 
@@ -101,8 +115,7 @@ describe('POST /posts with Tags', function () {
 });
 
 describe('DELETE /posts', function () {
-    // delete tag
-    it('deletes Post', function (done) {
+    it('deletes existing Post', function (done) {
         var postData = {
             name: 'Test Post to Delete'
         };
@@ -118,5 +131,19 @@ describe('DELETE /posts', function () {
                     done();
                 });
         });
+    });
+});
+
+describe('DELETE /posts', function () {
+    it('tries to delete non existing Post', function (done) {
+        server
+            .delete('/posts/' + Number.MAX_VALUE)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(404)
+            .end(function (err, res) {
+                res.status.should.equal(404);
+                done();
+            });
     });
 });

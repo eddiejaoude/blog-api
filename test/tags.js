@@ -40,8 +40,7 @@ describe('POST /tags', function () {
 });
 
 describe('DELETE /tags', function () {
-    // delete tag
-    it('deletes Tag', function (done) {
+    it('deletes existing Tag', function (done) {
         var tagData = {
             name: 'Test Tag to Delete'
         };
@@ -57,5 +56,19 @@ describe('DELETE /tags', function () {
                     done();
                 });
         });
+    });
+});
+
+describe('DELETE /tags', function () {
+    it('tries to delete non existing Tag', function (done) {
+        server
+            .delete('/tags/' + Number.MAX_VALUE)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(404)
+            .end(function (err, res) {
+                res.status.should.equal(404);
+                done();
+            });
     });
 });

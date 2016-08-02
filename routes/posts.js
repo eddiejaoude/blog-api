@@ -29,7 +29,13 @@ router.get('/:id', function (req, res, next) {
             }
         }]
     }).then(function (post) {
-        res.json(post);
+        if (post === null) {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        } else {
+            res.json(post);
+        }
     });
 });
 

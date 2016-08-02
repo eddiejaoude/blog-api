@@ -16,9 +16,14 @@ router.post('/', function (req, res, next) {
 
 router.delete('/:id', function (req, res, next) {
     models.tag.findById(req.params.id).then(function (tag) {
-        tag.destroy();
-    }).then(function () {
-        res.status(204).json({});
+        if (tag === null) {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        } else {
+            tag.destroy();
+            res.status(204).json({});
+        }
     })
 });
 
