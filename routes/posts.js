@@ -69,7 +69,7 @@ router.post('/', function (req, res, next) {
                             through: {
                                 attributes: []
                             }
-                        }],
+                        }]
                     }).then(function (postWithTags) {
                         res.status(201).json(postWithTags);
                     });
