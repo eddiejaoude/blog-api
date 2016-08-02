@@ -39,7 +39,7 @@ describe('POST /tags', function () {
     });
 });
 
-describe('DELETE /tags', function () {
+describe('DELETE /tags/{id}', function () {
     it('deletes existing Tag', function (done) {
         var tagData = {
             name: 'Test Tag to Delete'
@@ -59,10 +59,49 @@ describe('DELETE /tags', function () {
     });
 });
 
-describe('DELETE /tags', function () {
+describe('DELETE /tags/{id}', function () {
     it('tries to delete non existing Tag', function (done) {
         server
             .delete('/tags/' + Number.MAX_VALUE)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(404)
+            .end(function (err, res) {
+                res.status.should.equal(404);
+                done();
+            });
+    });
+});
+
+describe('PUT /tags/{id}', function () {
+    it('updates an existing Tag', function (done) {
+        var tagData = {
+            name: 'Test Tag to Update'
+        };
+        var tagDataUpdate = {
+            name: 'Test Tag Updated'
+        };
+
+        models.tag.create(tagData).then(function (tag) {
+            server
+                .put('/tags/' + tag.id)
+                .send(tagDataUpdate)
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (err, res) {
+                    res.status.should.equal(200);
+                    res.body.name.should.equal(tagDataUpdate.name);
+                    done();
+                });
+        });
+    });
+});
+
+describe('PUT /tags/{id}', function () {
+    it('tries to delete non existing Tag', function (done) {
+        server
+            .put('/tags/' + Number.MAX_VALUE)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(404)
