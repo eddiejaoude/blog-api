@@ -68,5 +68,6 @@ API using ExpressJS.
 
 ## Future considerations
 
+* DB migrations
 * Pagination
 * Hypermedia HAL

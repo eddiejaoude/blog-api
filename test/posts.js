@@ -63,7 +63,7 @@ describe('GET /posts/{id}', function () {
 });
 
 describe('POST /posts with no Tags', function () {
-    it('respond with json', function (done) {
+    it('creates Post', function (done) {
         var postData = {
             title: 'Test Post title',
             description: 'Test Post description'
@@ -85,8 +85,31 @@ describe('POST /posts with no Tags', function () {
     });
 });
 
+describe('POST /posts with no Tags', function () {
+    it('tries to create an invalid Post', function (done) {
+        var postData = {
+            title: 'T',
+            description: 'Test Post description'
+        };
+
+        server
+            .post('/posts')
+            .send(postData)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400)
+            .end(function (err, res) {
+                res.status.should.equal(400);
+                res.body.length.should.be.equal(1);
+                res.body[0].message.should.be.not.empty;
+                res.body[0].path.should.be.equal('title');
+                done();
+            });
+    });
+});
+
 describe('POST /posts with Tags', function () {
-    it('respond with json', function (done) {
+    it('creates a new Post', function (done) {
         var postData = {
             title: 'Test Post title',
             description: 'Test Post description'
@@ -115,10 +138,39 @@ describe('POST /posts with Tags', function () {
     });
 });
 
+describe('POST /posts with Tags', function () {
+    it('tries to create an invalid Post', function (done) {
+        var postData = {
+            title: 'T',
+            description: 'Test Post description'
+        };
+        var tagData = {
+            name: 'Test Tag for Post'
+        };
+
+        models.tag.create(tagData).then(function (tag) {
+            server
+                .post('/posts')
+                .send({title: postData.title, description: postData.description, tags: [{id: tag.id}]})
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(400)
+                .end(function (err, res) {
+                    res.status.should.equal(400);
+                    res.body.length.should.be.equal(1);
+                    res.body[0].message.should.be.not.empty;
+                    res.body[0].path.should.be.equal('title');
+                    done();
+                });
+        });
+    });
+});
+
 describe('DELETE /posts', function () {
     it('deletes existing Post', function (done) {
         var postData = {
-            name: 'Test Post to Delete'
+            title: 'Test Post to Delete',
+            description: 'Test Post description'
         };
 
         models.post.create(postData).then(function (post) {
@@ -166,13 +218,15 @@ describe('PUT /posts/{id}', function () {
     });
 });
 
-describe('PUT /posts/{id}', function () {
+describe('PUT /posts/{id} with no Tags', function () {
     it('updates an existing Post with no Tags', function (done) {
         var postData = {
-            title: 'Test Post to Update'
+            title: 'Test Post to Update',
+            description: 'Test Post description'
         };
         var postDataUpdate = {
-            title: 'Test Post Updated'
+            title: 'Test Post Updated',
+            description: 'Test Post description'
         };
 
         models.post.create(postData).then(function (post) {
@@ -191,13 +245,44 @@ describe('PUT /posts/{id}', function () {
     });
 });
 
-describe('PUT /posts/{id}', function () {
-    it('updates an existing Post with Tags', function (done) {
+describe('PUT /posts/{id} with no Tags', function () {
+    it('tries to update an invalid Post', function (done) {
         var postData = {
-            title: 'Test Post to Update'
+            title: 'Test Post Update',
+            description: 'Test Post description'
         };
         var postDataUpdate = {
-            title: 'Test Post Updated'
+            title: 'T',
+            description: 'Test Post description'
+        };
+
+        models.post.create(postData).then(function (post) {
+            server
+                .put('/posts/' + post.id)
+                .send(postDataUpdate)
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(400)
+                .end(function (err, res) {
+                    res.status.should.equal(400);
+                    res.body.length.should.be.equal(1);
+                    res.body[0].message.should.be.not.empty;
+                    res.body[0].path.should.be.equal('title');
+                    done();
+                });
+        });
+    });
+});
+
+describe('PUT /posts/{id} with Tags', function () {
+    it('updates an existing Post with Tags', function (done) {
+        var postData = {
+            title: 'Test Post title to Update',
+            description: 'Test Post description'
+        };
+        var postDataUpdate = {
+            title: 'Test Post Updated',
+            description: 'Test Post description'
         };
         var tagData = {
             name: 'Test Tag for Post'
@@ -218,6 +303,40 @@ describe('PUT /posts/{id}', function () {
                         res.body.tags.length.should.be.equal(1);
                         res.body.tags[0].id.should.be.equal(tag.id);
                         res.body.tags[0].name.should.be.equal(tagData.name);
+                        done();
+                    });
+            });
+        });
+    });
+});
+
+describe('PUT /posts/{id} with Tags', function () {
+    it('tries to update an invalid Post with Tags', function (done) {
+        var postData = {
+            title: 'Test Post title to Update',
+            description: 'Test Post description'
+        };
+        var postDataUpdate = {
+            title: 'T',
+            description: 'Test Post description'
+        };
+        var tagData = {
+            name: 'Test Tag for Post'
+        };
+
+        models.post.create(postData).then(function (post) {
+            models.tag.create(tagData).then(function (tag) {
+                server
+                    .put('/posts/' + post.id)
+                    .send({title: postDataUpdate.title, description: postDataUpdate.description, tags: [{id: tag.id}]})
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(400)
+                    .end(function (err, res) {
+                        res.status.should.equal(400);
+                        res.body.length.should.be.equal(1);
+                        res.body[0].message.should.be.not.empty;
+                        res.body[0].path.should.be.equal('title');
                         done();
                     });
             });

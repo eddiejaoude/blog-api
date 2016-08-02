@@ -1,6 +1,7 @@
 var models = require('../models');
 var express = require('express');
 var router = express.Router();
+var sequelize = require('sequelize');
 
 router.get('/', function (req, res, next) {
     models.post.findAll({
@@ -41,10 +42,11 @@ router.get('/:id', function (req, res, next) {
 
 /* @TODO: should be done in a transaction */
 router.post('/', function (req, res, next) {
-
     if (req.body.tags === undefined) {
         models.post.create(req.body).then(function (post) {
             res.status(201).json(post);
+        }).catch(sequelize.ValidationError, function (err) {
+            res.status(400).json(err.errors);
         });
     } else {
         // find existing tags
@@ -74,6 +76,8 @@ router.post('/', function (req, res, next) {
                         res.status(201).json(postWithTags);
                     });
                 });
+            }).catch(sequelize.ValidationError, function (err) {
+                res.status(400).json(err.errors);
             });
         });
     }
@@ -103,6 +107,8 @@ router.put('/:id', function (req, res, next) {
             if (req.body.tags === undefined) {
                 post.update(req.body).then(function (post) {
                     res.status(200).json(post);
+                }).catch(sequelize.ValidationError, function (err) {
+                    res.status(400).json(err.errors);
                 });
             } else {
                 // find existing tags
@@ -132,6 +138,8 @@ router.put('/:id', function (req, res, next) {
                                 res.status(200).json(postWithTags);
                             });
                         });
+                    }).catch(sequelize.ValidationError, function (err) {
+                        res.status(400).json(err.errors);
                     });
                 });
             }

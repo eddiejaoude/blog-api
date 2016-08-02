@@ -88,6 +88,28 @@ describe('POST /tags', function () {
     });
 });
 
+describe('POST /tags', function () {
+    it('tries to create an invalid Tag', function (done) {
+        var tagData = {
+            name: 'T'
+        };
+
+        server
+            .post('/tags')
+            .send(tagData)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400)
+            .end(function (err, res) {
+                res.status.should.equal(400);
+                res.body.length.should.be.equal(1);
+                res.body[0].message.should.be.not.empty;
+                res.body[0].path.should.be.equal('name');
+                done();
+            });
+    });
+});
+
 describe('DELETE /tags/{id}', function () {
     it('deletes existing Tag', function (done) {
         var tagData = {
@@ -161,5 +183,32 @@ describe('PUT /tags/{id}', function () {
                 res.status.should.equal(404);
                 done();
             });
+    });
+});
+
+describe('PUT /tags/{id}', function () {
+    it('tries to update with an invalid Tag', function (done) {
+        var tagData = {
+            name: 'Test Tag to Update'
+        };
+        var tagDataUpdate = {
+            name: 'T'
+        };
+
+        models.tag.create(tagData).then(function (tag) {
+            server
+                .put('/tags/' + tag.id)
+                .send(tagDataUpdate)
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (err, res) {
+                    res.status.should.equal(400);
+                    res.body.length.should.be.equal(1);
+                    res.body[0].message.should.be.not.empty;
+                    res.body[0].path.should.be.equal('name');
+                    done();
+                });
+        });
     });
 });

@@ -2,7 +2,14 @@
 
 module.exports = function (sequelize, DataTypes) {
     var tag = sequelize.define("tag", {
-        name: DataTypes.STRING
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+                len: [3, 24]
+            }
+        }
     }, {
         classMethods: {
             associate: function (models) {

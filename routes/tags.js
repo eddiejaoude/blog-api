@@ -1,7 +1,7 @@
 var models = require('../models');
 var express = require('express');
 var router = express.Router();
-var sequelize = require('sequelize')
+var sequelize = require('sequelize');
 
 router.get('/', function (req, res, next) {
     models.tag.findAll({}).then(function (tags) {
@@ -35,6 +35,8 @@ router.get('/:id', function (req, res, next) {
 router.post('/', function (req, res, next) {
     models.tag.create(req.body).then(function (tag) {
         res.status(201).json(tag);
+    }).catch(sequelize.ValidationError, function (err) {
+        res.status(400).json(err.errors);
     });
 });
 
@@ -56,6 +58,8 @@ router.put('/:id', function (req, res, next) {
         if (tag) {
             tag.update(req.body).then(function(tag) {
                 res.status(200).json(tag);
+            }).catch(sequelize.ValidationError, function (err) {
+                res.status(400).json(err.errors);
             });
         } else {
             var err = new Error('Not Found');
