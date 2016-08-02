@@ -39,7 +39,7 @@ describe('POST /tags', function () {
     });
 });
 
-describe('DELETE /tag', function () {
+describe('DELETE /tags', function () {
     // delete tag
     it('deletes Tag', function (done) {
         var tagData = {
