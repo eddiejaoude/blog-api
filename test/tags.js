@@ -99,7 +99,7 @@ describe('PUT /tags/{id}', function () {
 });
 
 describe('PUT /tags/{id}', function () {
-    it('tries to delete non existing Tag', function (done) {
+    it('tries to update non existing Tag', function (done) {
         server
             .put('/tags/' + Number.MAX_VALUE)
             .set('Accept', 'application/json')
