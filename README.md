@@ -66,9 +66,10 @@ API using ExpressJS.
 
 *Note: Only `tag.id` is required on `POST` & `PUT`, the `tag.name` is in `GET`*
 
-## Pending work
+## Future considerations
 
 * DB migrations
 * Authentication
 * Pagination
 * Hypermedia HAL
+* Move Controller logic to Service 
