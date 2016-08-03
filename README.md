@@ -19,6 +19,8 @@ API using ExpressJS.
 
 * Run `npm test` (note: server from above must be running)
 
+Or to run in parallel `./node_modules/.bin/mocha-parallel-tests test`, note: output is more difficult to read.
+
 ## End points
 
 ### Tags
