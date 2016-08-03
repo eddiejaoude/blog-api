@@ -68,6 +68,7 @@ API using ExpressJS.
 
 ## Future considerations
 
+* Services & move logic out of the Controllers
 * DB migrations
 * Authentication
 * Pagination
