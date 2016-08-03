@@ -16,7 +16,6 @@ describe('GET /posts', function () {
                 .get('/posts')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(200)
                 .end(function (err, res) {
                     res.status.should.equal(200);
                     res.body.length.should.be.above(0);
@@ -38,7 +37,6 @@ describe('GET /posts/{id}', function () {
                 .get('/posts/' + post.id)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(200)
                 .end(function (err, res) {
                     res.status.should.equal(200);
                     res.body.id.should.be.equal(post.id);
@@ -54,7 +52,6 @@ describe('GET /posts/{id}', function () {
             .get('/posts/' + Number.MAX_VALUE)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(404)
             .end(function (err, res) {
                 res.status.should.equal(404);
                 done();
@@ -74,7 +71,6 @@ describe('POST /posts with no Tags', function () {
             .send(postData)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(201)
             .end(function (err, res) {
                 res.status.should.equal(201);
                 res.body.id.should.be.above(1);
@@ -97,7 +93,6 @@ describe('POST /posts with no Tags', function () {
             .send(postData)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(400)
             .end(function (err, res) {
                 res.status.should.equal(400);
                 res.body.length.should.be.equal(1);
@@ -124,7 +119,6 @@ describe('POST /posts with Tags', function () {
                 .send({title: postData.title, description: postData.description, tags: [{id: tag.id}]})
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(201)
                 .end(function (err, res) {
                     res.status.should.equal(201);
                     res.body.id.should.be.above(1);
@@ -154,7 +148,6 @@ describe('POST /posts with Tags', function () {
                 .send({title: postData.title, description: postData.description, tags: [{id: tag.id}]})
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(400)
                 .end(function (err, res) {
                     res.status.should.equal(400);
                     res.body.length.should.be.equal(1);
@@ -178,7 +171,6 @@ describe('DELETE /posts', function () {
                 .delete('/posts/' + post.id)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(204)
                 .end(function (err, res) {
                     res.status.should.equal(204);
                     models.post.findById(post.id).then(function(post) {
@@ -196,7 +188,6 @@ describe('DELETE /posts', function () {
             .delete('/posts/' + Number.MAX_VALUE)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(404)
             .end(function (err, res) {
                 res.status.should.equal(404);
                 done();
@@ -210,7 +201,6 @@ describe('PUT /posts/{id}', function () {
             .put('/posts/' + Number.MAX_VALUE)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(404)
             .end(function (err, res) {
                 res.status.should.equal(404);
                 done();
@@ -235,7 +225,6 @@ describe('PUT /posts/{id} with no Tags', function () {
                 .send(postDataUpdate)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(200)
                 .end(function (err, res) {
                     res.status.should.equal(200);
                     res.body.title.should.equal(postDataUpdate.title);
@@ -262,7 +251,6 @@ describe('PUT /posts/{id} with no Tags', function () {
                 .send(postDataUpdate)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(400)
                 .end(function (err, res) {
                     res.status.should.equal(400);
                     res.body.length.should.be.equal(1);
@@ -295,7 +283,6 @@ describe('PUT /posts/{id} with Tags', function () {
                     .send({title: postDataUpdate.title, description: postDataUpdate.description, tags: [{id: tag.id}]})
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
-                    .expect(200)
                     .end(function (err, res) {
                         res.status.should.equal(200);
                         res.body.id.should.be.equal(post.id);
@@ -331,7 +318,6 @@ describe('PUT /posts/{id} with Tags', function () {
                     .send({title: postDataUpdate.title, description: postDataUpdate.description, tags: [{id: tag.id}]})
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
-                    .expect(400)
                     .end(function (err, res) {
                         res.status.should.equal(400);
                         res.body.length.should.be.equal(1);

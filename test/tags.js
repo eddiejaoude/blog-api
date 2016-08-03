@@ -10,7 +10,6 @@ describe('GET /tags', function () {
             .get('/tags')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .end(function (err, res) {
                 res.status.should.equal(200);
                 res.body.length.should.be.above(1);
@@ -36,7 +35,6 @@ describe('GET /tags/{id}', function () {
                         .get('/tags/' + tag.id)
                         .set('Accept', 'application/json')
                         .expect('Content-Type', /json/)
-                        .expect(200)
                         .end(function (err, res) {
                             res.status.should.equal(200);
                             res.body.id.should.be.equal(tag.id);
@@ -59,7 +57,6 @@ describe('GET /tags/{id}', function () {
             .get('/tags/' + Number.MAX_VALUE)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(404)
             .end(function (err, res) {
                 res.status.should.equal(404);
                 done();
@@ -78,7 +75,6 @@ describe('POST /tags', function () {
             .send(tagData)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(201)
             .end(function (err, res) {
                 res.status.should.equal(201);
                 res.body.id.should.be.above(1);
@@ -99,7 +95,6 @@ describe('POST /tags', function () {
             .send(tagData)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(400)
             .end(function (err, res) {
                 res.status.should.equal(400);
                 res.body.length.should.be.equal(1);
@@ -121,7 +116,6 @@ describe('DELETE /tags/{id}', function () {
                 .delete('/tags/' + tag.id)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(204)
                 .end(function (err, res) {
                     res.status.should.equal(204);
                     models.tag.findById(tag.id).then(function(tag) {
@@ -139,7 +133,6 @@ describe('DELETE /tags/{id}', function () {
             .delete('/tags/' + Number.MAX_VALUE)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(404)
             .end(function (err, res) {
                 res.status.should.equal(404);
                 done();
@@ -162,7 +155,6 @@ describe('PUT /tags/{id}', function () {
                 .send(tagDataUpdate)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(200)
                 .end(function (err, res) {
                     res.status.should.equal(200);
                     res.body.name.should.equal(tagDataUpdate.name);
@@ -178,7 +170,6 @@ describe('PUT /tags/{id}', function () {
             .put('/tags/' + Number.MAX_VALUE)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(404)
             .end(function (err, res) {
                 res.status.should.equal(404);
                 done();
@@ -201,7 +192,6 @@ describe('PUT /tags/{id}', function () {
                 .send(tagDataUpdate)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(200)
                 .end(function (err, res) {
                     res.status.should.equal(400);
                     res.body.length.should.be.equal(1);
