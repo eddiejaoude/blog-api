@@ -14,14 +14,18 @@ API using ExpressJS.
 * Change DB config in `config/config.json`
 * Create the empty database
 * Install dependencies `npm install`
-* Run server `DEBUG=api:* npm start`
+* Run server `DEBUG=api:* npm start` *note will create the database*
 * Visit `http://localhost:3000/`
 
 ### Testing
 
-* Run `npm test` (note: server does not need to be running)
+* Run `npm test` *note: server does not need to be running & will run migrations*
 
 Or to run in parallel `./node_modules/.bin/mocha-parallel-tests test`, note: output is more difficult to read.
+
+### Migrations
+
+* `./node_modules/sequelize-cli/bin/sequelize db:migrate`
 
 ## End points
 
