@@ -12,13 +12,14 @@ API using ExpressJS.
 ## Installation / Setup
 
 * Change DB config in `config/config.json`
+* Create the empty database
 * Install dependencies `npm install`
 * Run server `DEBUG=api:* npm start`
 * Visit `http://localhost:3000/`
 
 ### Testing
 
-* Run `npm test` (note: server from above must be running)
+* Run `npm test` (note: server does not need to be running)
 
 Or to run in parallel `./node_modules/.bin/mocha-parallel-tests test`, note: output is more difficult to read.
 
