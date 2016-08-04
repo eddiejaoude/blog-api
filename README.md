@@ -11,6 +11,7 @@ API using ExpressJS.
 
 ## Installation / Setup
 
+* Change DB config in `config/config.json`
 * Install dependencies `npm install`
 * Run server `DEBUG=api:* npm start`
 * Visit `http://localhost:3000/`
