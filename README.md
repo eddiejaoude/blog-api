@@ -74,7 +74,7 @@ Or to run in parallel `./node_modules/.bin/mocha-parallel-tests test`, note: out
 ## Future considerations
 
 * Services & move logic out of the Controllers
-* DB migrations
+* Repository layer
 * Authentication
 * Pagination
 * Hypermedia HAL
