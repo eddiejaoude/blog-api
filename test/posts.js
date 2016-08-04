@@ -1,8 +1,8 @@
-var supertest = require('supertest');
+var app    = require('../app.js');
+var server = require('supertest')(app);
 var assert = require('chai').assert;
 var should = require("should");
 var models = require('../models');
-var server = supertest.agent("http://localhost:3000");
 
 describe('Check that I can get a list of Posts with [GET] /posts', function () {
     var createdPost = null;
